@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/CaloryTrackerInModules" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/compose/ChatApp/ChatApp-Server-master" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/compose/ChineseApp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/compose/ChineseApp/ChineseAppFinal" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/compose/ColoredEventsApp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/compose/NoteApp" vcs="Git" />
+  </component>
+</project>
