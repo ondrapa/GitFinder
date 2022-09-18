@@ -1,6 +1,6 @@
 package com.example.gitusers.di
 
-import com.example.gitusers.data.remote.RepoApi
+import com.example.gitusers.data.remote.Api
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepoApi(): RepoApi {
+    fun provideRepoApi(): Api {
         return Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .addConverterFactory(MoshiConverterFactory.create())

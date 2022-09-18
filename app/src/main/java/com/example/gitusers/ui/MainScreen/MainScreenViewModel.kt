@@ -1,12 +1,17 @@
 package com.example.gitusers.ui.MainScreen
 
-import androidx.compose.material.ScaffoldState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gitusers.data.navigation.Route
+import com.example.gitusers.domain.model.Branch
 import com.example.gitusers.domain.repository.RepoRepository
+import com.example.gitusers.ui.state.BranchesState
+import com.example.gitusers.ui.state.CommitState
+import com.example.gitusers.ui.state.ReposState
 import com.example.gitusers.util.Resource
 import com.example.gitusers.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +28,13 @@ class MainScreenViewModel @Inject constructor(
     var userToFind by mutableStateOf("")
         private set
 
-    var reposState by mutableStateOf(RepoState())
+    var reposState by mutableStateOf(ReposState())
+        private set
+
+    var branchesState by mutableStateOf(BranchesState(null))
+        private set
+
+    var commitsState by mutableStateOf(CommitState(null))
         private set
 
     fun onUserToFindChange(username: String) {
@@ -34,17 +45,17 @@ class MainScreenViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun loadRepo() {
-        viewModelScope.launch {
-            if(userToFind == "") {
-                sendUiEvent(UiEvent.ShowSnackbar(
-                    message = "Username can not be empty"
-                ))
-            } else {
+        if(userToFind == "") {
+            sendUiEvent(UiEvent.ShowSnackbar(
+                message = "Username can not be empty"
+            ))
+        } else {
+            viewModelScope.launch {
                 reposState = reposState.copy(
                     isLoading = true,
                     error = null
                 )
-                when (val result = repository.getRepo(userToFind)) {
+                when (val result = repository.getRepos(userToFind)) {
                     is Resource.Success -> {
                         reposState = reposState.copy(
                             repos = result.data,
@@ -64,6 +75,60 @@ class MainScreenViewModel @Inject constructor(
                             )
                         )
                     }
+                }
+            }
+        }
+    }
+
+    fun onRepoClick(repoName: String) {
+        viewModelScope.launch {
+            when (val result = repository.getBranches(userToFind, repoName)) {
+                is Resource.Success -> {
+                    branchesState = branchesState.copy(
+                        branches = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+                is Resource.Error -> {
+                    branchesState = branchesState.copy(
+                        branches = null,
+                        isLoading = false,
+                        error = result.message
+                    )
+                    sendUiEvent(
+                        UiEvent.ShowSnackbar(
+                            message = result.message ?: "An unknown error occurred"
+                        )
+                    )
+                }
+            }
+        }
+        loadCommits(repoName)
+        sendUiEvent(UiEvent.Navigate(Route.REPO))
+    }
+
+    fun loadCommits(repoName: String) {
+        viewModelScope.launch {
+            when (val result = repository.getCommits(userToFind, repoName)) {
+                is Resource.Success -> {
+                    commitsState = commitsState.copy(
+                        commits = result.data,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+                is Resource.Error -> {
+                    commitsState = commitsState.copy(
+                        commits = null,
+                        isLoading = false,
+                        error = result.message
+                    )
+                    sendUiEvent(
+                        UiEvent.ShowSnackbar(
+                            message = result.message ?: "An unknown error occurred"
+                        )
+                    )
                 }
             }
         }

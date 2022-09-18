@@ -1,27 +1,22 @@
 package com.example.gitusers
 
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.navigation.compose.composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.gitusers.data.navigation.Route
+import com.example.gitusers.data.navigation.*
 import com.example.gitusers.ui.MainScreen.MainScreen
 import com.example.gitusers.ui.MainScreen.MainScreenViewModel
-import com.example.gitusers.ui.theme.GitUsersTheme
+import com.example.gitusers.ui.MainScreen.RepoScreen
+import com.example.gitusers.ui.theme.PalleteLighterBrown
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +28,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val scaffoldState = rememberScaffoldState()
             Scaffold(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                ,
                 scaffoldState = scaffoldState
             ) {
                 NavHost(
@@ -41,9 +38,19 @@ class MainActivity : ComponentActivity() {
                     startDestination = Route.MAIN
                 ) {
                     composable(Route.MAIN) {
-                        MainScreen(scaffoldState)
+                        val viewModel: MainScreenViewModel = hiltViewModel(navController.previousBackStackEntry ?: it)
+                        MainScreen(
+                            scaffoldState = scaffoldState,
+                            onNavigate = navController::navigate,
+                            viewModel
+                        )
                     }
                     composable(Route.REPO) {
+                        val viewModel: MainScreenViewModel = hiltViewModel(navController.previousBackStackEntry ?: it)
+                        RepoScreen(
+                            scaffoldState = scaffoldState,
+                            viewModel
+                        )
                     }
                 }
             }

@@ -13,19 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gitusers.domain.model.Branch
 import com.example.gitusers.util.UiEvent
 import kotlinx.coroutines.flow.collect
 
 @Composable
 fun MainScreen(
     scaffoldState: ScaffoldState,
-    viewModel: MainScreenViewModel = hiltViewModel()
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    viewModel: MainScreenViewModel
+    // viewModel: MainScreenViewModel = hiltViewModel()
 ) {
 
     val repos = viewModel.reposState.repos
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when(event) {
+                is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
@@ -39,6 +43,7 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(30.dp)
+
     ) {
         TextField(
             value = viewModel.userToFind,
@@ -57,11 +62,13 @@ fun MainScreen(
         } else {
             LazyColumn(
                 Modifier
-                    .fillMaxSize()
                     .padding(10.dp)
             ) {
                 items(repos) { repo ->
-                    Text(text = repo.name)
+                    Text(
+                        text = repo.name,
+                        modifier = Modifier.clickable { viewModel.onRepoClick(repo.name) }
+                    )
                 }
             }
         }
