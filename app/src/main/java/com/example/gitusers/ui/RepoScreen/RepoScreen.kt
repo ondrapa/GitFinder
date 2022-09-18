@@ -73,7 +73,7 @@ fun RepoScreen(
                     if (index == 0) {
                         Text(
                             text = "Branches",
-                            fontSize = 22.sp,
+                            fontSize = 25.sp,
                             modifier = Modifier.padding(20.dp, 5.dp, 20.dp, 20.dp),
                             color = PalleteDarkBrown,
                             fontWeight = FontWeight.Bold
@@ -111,7 +111,7 @@ fun RepoScreen(
                     if (index == 0) {
                         Text(
                             text = "Last commits",
-                            fontSize = 22.sp,
+                            fontSize = 25.sp,
                             modifier = Modifier.padding(20.dp),
                             color = PalleteDarkBrown,
                             fontWeight = FontWeight.Bold
