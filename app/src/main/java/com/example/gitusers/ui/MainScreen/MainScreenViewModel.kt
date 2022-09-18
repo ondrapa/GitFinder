@@ -134,6 +134,10 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun onInfoClick() {
+        sendUiEvent(UiEvent.Navigate(Route.INFO))
+    }
+
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

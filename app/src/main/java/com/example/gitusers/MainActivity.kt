@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.gitusers.data.navigation.*
+import com.example.gitusers.ui.InfoScreen.InfoScreen
 import com.example.gitusers.ui.MainScreen.MainScreen
 import com.example.gitusers.ui.MainScreen.MainScreenViewModel
 import com.example.gitusers.ui.MainScreen.RepoScreen
@@ -29,8 +30,7 @@ class MainActivity : ComponentActivity() {
             val scaffoldState = rememberScaffoldState()
             Scaffold(
                 modifier = Modifier
-                    .fillMaxSize()
-                ,
+                    .fillMaxSize(),
                 scaffoldState = scaffoldState
             ) {
                 NavHost(
@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
                             scaffoldState = scaffoldState,
                             viewModel
                         )
+                    }
+                    composable(Route.INFO) {
+                        InfoScreen()
                     }
                 }
             }

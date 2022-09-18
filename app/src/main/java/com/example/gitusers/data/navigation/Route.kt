@@ -4,5 +4,6 @@ object Route {
 
     const val MAIN = "main"
     const val REPO = "repo"
+    const val INFO = "info"
 
 }
